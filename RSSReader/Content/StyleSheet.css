@@ -1,0 +1,136 @@
+﻿body{
+    font-family: 'Rubik', sans-serif;
+    font-weight: 500;
+}
+
+b{
+    font-weight: 800;
+}
+
+.body-content{
+    max-width: 100%;
+    width:100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    height: calc(100vh - 140px);
+    margin-top: 70px;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+    height: 70px;
+    background: rgb(64,64,64);
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+.navbar{
+    height: 70px;
+    background: rgb(64,64,64);
+}
+
+.feed{
+    overflow-y: auto;
+    border-right: 1px solid rgb(64,64,64);
+    height: 100%;
+}
+
+.sources{
+    overflow-y: auto;
+    border-left: 1px solid gray;
+    height: 100%;
+    padding: 0px;
+}
+
+body{
+    padding: 0;
+}
+
+::-webkit-scrollbar{
+    width: 16px;
+}
+
+::-webkit-scrollbar-button {
+    background: rgb(64,64,64);
+    height: 16px;
+    width: 16px;
+    color: white;
+
+}
+
+::-webkit-scrollbar-button:vertical:increment{
+        background-image: url('Images/arrowdown.PNG');
+        background-size: cover;
+}
+
+::-webkit-scrollbar-button:vertical:decrement{
+        background-image: url('Images/arrowup.PNG');
+}
+
+::-webkit-scrollbar-button:vertical:increment:hover{
+        background-image: url('Images/arrowdownhover.PNG');
+}
+
+::-webkit-scrollbar-button:vertical:decrement:hover{
+        background-image: url('Images/arrowuphover.PNG');
+}
+
+::-webkit-scrollbar-track{
+    background: rgb(64,64,64);
+    width: 14px;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(128,128,128);
+    border: 3px solid rgb(64,64,64);
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background: rgb(195,195,195);
+}
+
+.RSS-Source{
+    height: 80px;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px rgb(32,32,32) solid;
+}
+
+.RSS-Source>div{
+    height: 100%;
+}
+
+.RSS-Thumbnail>img{
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.alignHelper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.aligner{
+    vertical-align: middle;
+    margin: 0!important;
+}
+
+.alignContainer{   
+    height: 100%;
+    white-space: nowrap; 
+    text-align: center;
+    padding: 0!important;
+}
+
+.RSS-Link{
+    text-align: left;
+}
+
+.RSS-Subscription>input{
+    height: 20px;
+    width: 20px;
+}
