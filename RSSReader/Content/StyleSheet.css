@@ -36,6 +36,7 @@ footer{
     overflow-y: auto;
     border-right: 1px solid rgb(64,64,64);
     height: 100%;
+    background: rgb(226,226,226);
 }
 
 .sources{
@@ -43,6 +44,7 @@ footer{
     border-left: 1px solid gray;
     height: 100%;
     padding: 0px;
+    background: rgb(226,226,226);
 }
 
 body{
@@ -97,6 +99,7 @@ body{
     width: 100%;
     padding: 10px;
     border-bottom: 1px rgb(32,32,32) solid;
+    background: white;
 }
 
 .RSS-Source>div{
@@ -104,8 +107,12 @@ body{
 }
 
 .RSS-Thumbnail>img{
-    max-height: 40px;
-    max-width: 40px;
+    max-height: 59px;
+    max-width: 100%;
+}
+
+.RSS-Thumbnail{
+    height: 100%;
 }
 
 .alignHelper{
@@ -133,4 +140,55 @@ body{
 .RSS-Subscription>input{
     height: 20px;
     width: 20px;
+}
+
+.RSS-Item{
+    width: calc(100% - 20px);
+    margin: 10px;
+    background: white;
+    border: 1px solid rgb(172,172,172);
+    border-radius: 3px;
+}
+
+.RSS-Item-Title{
+    text-align: left;
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 20px;
+}
+
+.RSS-Item-Header{
+    height: 40px;
+    border-bottom: 1px solid rgb(232,232,232);
+    overflow: hidden;
+}
+
+.RSS-Item-Category{
+    color: rgb(150,150,150);
+    height: 100%;
+    overflow: hidden;
+    font-size: 13px;
+    text-align: right;
+}
+
+.RSS-Item-Footer{
+    padding: 5px;
+    height: 28px;
+    border-top: 1px solid rgb(232,232,232);
+    width: 100%;
+    font-size: 14px;
+    color: rgb(150,150,150);
+    overflow: hidden;
+}
+
+.RSS-Item-Content{
+    padding: 10px;
+}
+
+.RSS-Item-Source{
+    text-align: right;
+}
+
+.RSS-Item-Date{
+    padding-left: 5px;
 }
