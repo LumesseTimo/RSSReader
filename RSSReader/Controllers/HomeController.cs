@@ -26,5 +26,10 @@ namespace RSSReader.Controllers
 
             return View();
         }
+
+        public ActionResult GetFeeds()
+        {
+            return View();
+        }
     }
 }
