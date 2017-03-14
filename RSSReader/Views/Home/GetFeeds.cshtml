@@ -5,31 +5,113 @@
 
 </head>
 <body>
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <rss version="2.0">
+    @{
+        List<string> feedlist = new List<string>();
+    }
+    <button type="button" onclick="feedlist = loadFeeds();">test</button>
+     @*location.href = '@Url.Action("testsite","Home", new { feedlist })'*@
+    <div id="rss-overview"></div>
 
-        @{
-            string fsdfd = new RSS_Channel().test();
+    <script>
+        function loadFeeds() {
+            var list = new Array();
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    list = createFeedslist(this);
+                }
+            };
+
+            xhttp.open("GET", "/Content/test.xml", true);
+            xhttp.send();
+
+            return list;
         }
 
-        <channel>
-            <title>W3Schools Home Page</title>
-            <link href="https://www.w3schools.com">https://www.w3schools.com</link>
-            <description>Free web building tutorials</description><br />
-            teststring += 
-            <item>
-                <title>RSS Tutorial</title>
-                <link href="https://www.w3schools.com/xml/xml_rss.asp">https://www.w3schools.com/xml/xml_rss.asp</link>
-                <description>New RSS tutorial on W3Schools</description>
-            </item><br />
-            <item>
-                <title>XML Tutorial</title>
-                <link href="https://www.w3schools.com/xml">https://www.w3schools.com/xml</link>
-                <description>New XML tutorial on W3Schools</description>
-            </item>
-        </channel>
+        function createFeedslist(xml) {
+            var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
+            for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
+
+                var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
+                for (var j = 0; j < getChannel.categories.length; j++) { //runs through all the saved categories for that channel
+                    / INSERT STUFF YOU WANT TO DO WITH THE CATEGORIES /
+                }
+            }
+
+            var a;
+            var b;
+            var link = "";
+            var title = "";
+            var category = "";
+            var description = "";
+            var pubDate = "";
+            var xmlDoc = xml.responseXML;
+            var listdiv = "<div class='feed col-xs-8'>";
+            var channellink = 'https://www.w3schools.com/xml/ajax_xmlfile.asp';
+            var channelname = "test2";
+            var feeds = xmlDoc.getElementsByTagName("item");
+            var feedsList = new Array();
+            for (b = 0; b < feeds.length; b++) {
+                if (feeds[b].getElementsByTagName("link").length == 0) {
+                    link = "";
+                }
+                else {
+                    link = feeds[b].getElementsByTagName("link")[0].childNodes[0].nodeValue;
+                }
+                if (feeds[b].getElementsByTagName("title").length == 0) {
+                    title = "";
+                }
+                else {
+                    title = feeds[b].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+                }
+                if (feeds[b].getElementsByTagName("category").length == 0) {
+                    category = "";
+                }
+                else {
+                    category = feeds[b].getElementsByTagName("category")[0].childNodes[0].nodeValue;
+                }
+                if (feeds[b].getElementsByTagName("description").length == 0) {
+                    description = "";
+                }
+                else {
+                    description = feeds[b].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+                }
+                if (feeds[b].getElementsByTagName("pubDate").length == 0) {
+                    pubDate = "";
+                }
+                else {
+                    pubDate = feeds[b].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue;
+                }
+
+                feedsList.push(
+                    {
+                        link: link,
+                        title: title,
+                        category: category,
+                        description: description,
+                        pubDate: pubDate
+                    });
+            }
 
 
-    </rss>
+            for (var i = 0; i < feedsList.length; i++) {
+                listdiv += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+                feedsList[i].link + "'>" +
+                feedsList[i].title + "</a></div><div class='RSS-Item-Category col-xs-2'>" +
+                feedsList[i].category + "</div></div><div class='Row RSS-Item-Content'>" +
+                feedsList[i].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+                feedsList[i].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
+                channellink + "'>" + channelname + "</a></div></div></div>";
+            }
+            listdiv += "</div>";
+
+            document.getElementById("rss-overview").innerHTML = listdiv;
+
+            return feedsList;
+        }
+    </script>
 </body>
+
+
+
 </html>

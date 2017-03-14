@@ -31,5 +31,11 @@ namespace RSSReader.Controllers
         {
             return View();
         }
+
+        public ActionResult testsite(List<string> feedlist)
+        {
+            ViewBag.allFeeds = feedlist;
+            return View();
+        }
     }
 }
