@@ -1,0 +1,21 @@
+﻿
+@for (int i = 0; i < 100; i++)
+{
+    <div class="RSS-Source Row" id='@("feed"+i)'>
+        <div class="RSS-Thumbnail col-xs-3 alignContainer">
+            <span class="alignHelper"></span>
+            <img src="___RSSIMAGE___" class="aligner" />
+        </div>
+        <div class="RSS-Link col-xs-7 alignContainer">
+            <span class="alignHelper"></span>
+            <a class="aligner" href="___RSSLink___">
+                ___RSSTITLE___
+            </a>
+        </div>
+        <div class="RSS-Subscription col-xs-2 alignContainer">
+            <span class="alignHelper"></span>
+            <span class="aligner glyphicon glyphicon-remove-circle" onclick="UnSubscribe(@i)" id='@("icon"+i)' add />
+        </div>
+    </div>
+}
+

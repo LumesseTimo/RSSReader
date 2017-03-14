@@ -132,7 +132,7 @@
     <Content Include="Content\Images\arrowdown.PNG" />
     <Content Include="Content\Images\arrowdownhover.png" />
     <Content Include="Content\Images\arrowup.PNG" />
-    <Content Include="Content\Images\arrowuphover.png" />
+    <Content Include="Content\Images\arrowuphove.png" />
     <Content Include="Content\Images\^56F157C978BC63135F358D94A45ED38EA3585C44E40315870E^pimgpsh_fullsize_distr.jpg" />
     <Content Include="Content\StyleSheet.css" />
     <Content Include="favicon.ico" />
@@ -149,6 +149,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js.cookie.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -168,6 +169,8 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\RSS_Feedlist.cshtml" />
+    <Content Include="Views\Home\RSS_Sourcelist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

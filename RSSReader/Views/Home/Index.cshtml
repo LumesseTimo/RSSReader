@@ -2,57 +2,130 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="feed col-xs-8">
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <!--
-        Blueprint der DIV-Box für anziege eines RSS-Items
-    -->
-    
-    <div class="RSS-Item Row">
-        <div class="Row RSS-Item-Header">
-            <div class="RSS-Item-Title col-xs-10">
-                ___RSS-ITEM-TITEL___
-            </div>
-            <div class="RSS-Item-Category col-xs-2" title="___RSS-ITEM-KATEGORIEN___">
-                ___RSS-ITEM-KATEGORIEN___
-            </div>
-        </div>
+<script src="~/Scripts/js.cookie.js"></script>
+<script>
+    function UnSubscribe(id) {
+        if ($('#icon' + id).attr('add') !== undefined && $('icon' + id).attr('add') !== false) {
+            $('#icon' + id).removeAttr('add');
+            $('#icon' + id).attr('remove', true);
+        }
+        else {
+            $('#icon' + id).removeAttr('remove');
+            $('#icon' + id).attr('add',true);
+        }
+    }
 
-        <div class="Row RSS-Item-Content">
-            ___RSS-ITEM-CONTENT___
-        </div>
+    function getItems() {
 
-        <div class="Row RSS-Item-Footer">
-            <div class="col-xs-3 RSS-Item-Date">
-                ___RSS-ITEM-PUBLISHING-DATUM___
-            </div>
-            <div class="col-xs-9 RSS-Item-Source">
-                <a href="___RSS-SOURCE-LINK___">___RSS-SOURCE-NAME___</a>
-            </div>
-        </div>
-    </div>
+        $.ajax({
+            type: "GET",
+            url: "Home/RSS_Feedlist",
+            success: function (data) {
+                $("#feed").html(data);
+            }
+        });
+
+    }
+
+    function getFeeds() {
+
+        $.ajax({
+            type: "GET",
+            url: "Home/RSS_Sourcelist",
+            success: function (data) {
+                $("#sources").html(data + "<div class='RSS-Source Row addFeed'>"
+                                    + "<div class='RSS-Link col-xs-12 alignContainer'>"
+                                    + "<span class='alignHelper'></span>"
+                                    + "<span class='aligner'>"
+                                    + "<span class='glyphicon glyphicon-remove-circle' add></span>"
+                                    + "Add Other RSS-Feed"
+                                    + "</span>"
+                                    + "</div>"
+                                    + "</div>"
+                                    );
+            }
+        });
+
+    }
+
+    $(document).ready(function () {
+        getItems();
+        getFeeds();
+        Cookies.remove('Sources');
+        if (Cookies.get('Sources') == undefined) {
+            var Channel1 = { "link": "http://www.spiegel.de/politik/index.rss", "categories": Array() }
+            var Channel2 = { "link": "https://www.heise.de/newsticker/heise.rdf", "categories": Array() }
+            var Channel3 = { "link": "http://rss.sueddeutsche.de/app/service/rss/alles/index.rss", "categories": Array() }
+            var Channel4 = { "link": "http://www.bmwi.de/SiteGlobals/BMWI/Functions/RSSFeed/DE/RSSFeed-Kompakt.xml;jsessionid=649E32E3D68C44F9A088A1CACD230538", "categories": Array() }
+            var Channels = { "channel": Array() };
+            Channels.channel[0] = JSON.stringify(Channel1);
+            Channels.channel[1] = JSON.stringify(Channel2);
+            Channels.channel[2] = JSON.stringify(Channel3);
+            Channels.channel[3] = JSON.stringify(Channel4);
+            alert(Channels.channel.length);
+            Cookies.set('Sources', JSON.stringify(Channels));
+        }
+
+        var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
+
+        for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
+
+            var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
+
+            for (var j = 0; j < getChannel.categories.length; j++) { //runs through all the saved categories for that channel
+                string += getChannel.categories[j];
+            }
+        }
+
+});
+
+    function addFeed(link) {
+        var NewChannel = { "link": link, "categories": null };
+        for (var i = 0; i <= document.getElementsByName('Category').length; i++) {
+            NewChannel.categories[NewChannel.categories.length - 1] = document.getElementsByName('Category')[i].value;
+        }
+        var Channels = Cookies.getJSON('Sources');
+        Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel);
+        Cookies.set('Sources', JSON.stringify(Channels));
+
+        var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
+        for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
+
+            var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
+            for (var j = 0; j < getChannel.categories.length; j++) { //runs through all the saved categories for that channel
+                /* INSERT STUFF YOU WANT TO DO WITH THE CATEGORIES */
+            }
+        }
+    }
+
+    function removeFeed(link) {
+
+        var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
+        for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
+
+            var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
+            if (getChannel.link == link) {
+                delete getChannels.channel[i];
+                break;
+            }
+        }
+    }
+
+
+
+
+</script>
+
+<div class="feed col-xs-8" id="feed">
 
 </div>
-<div class="sources col-xs-4">
+<div class="sources col-xs-4" id="sources">
 
-    <!--
-        Blueprint der DIV-Box für anziege eines RSS-Feeds
-    -->  
-    <div class="RSS-Source Row">
-        <div class="RSS-Thumbnail col-xs-3 alignContainer">
-            <span class="alignHelper"></span>
-            <img src="___RSSIMAGE___" class="aligner" />
-        </div>
-        <div class="RSS-Link col-xs-7 alignContainer">
-            <span class="alignHelper"></span>
-            <a class="aligner" href="___RSSLink___">
-                ___RSSTITLE___
-            </a>
-        </div>
-        <div class="RSS-Subscription col-xs-2 alignContainer">
-            <span class="alignHelper"></span>
-            <input type="checkbox" class="aligner" onchange="UnSubscribe(___RSSLINK___)"/>
-        </div>
-    </div>
+</div>
+<div id="cookie">
 
 </div>
