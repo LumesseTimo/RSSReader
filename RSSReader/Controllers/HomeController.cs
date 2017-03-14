@@ -27,17 +27,8 @@ namespace RSSReader.Controllers
             return View();
         }
 
-        public ActionResult RSS_Feedlist()
+        public ActionResult GetFeeds()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-        public ActionResult RSS_Sourcelist()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }
