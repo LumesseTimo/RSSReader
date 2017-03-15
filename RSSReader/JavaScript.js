@@ -3,21 +3,18 @@
 });
 
 function loadFeeds() {
-    var list = new Array();
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            list = createFeedslist(this);
+            createFeedsList(this);
         }
     };
 
     xhttp.open("GET", "/Content/test.xml", true);
     xhttp.send();
-
-    return list;
 }
 
-function createFeedslist(xml) {
+function createFeedsList(xml) {
     Cookies.remove('Sources');
     if (Cookies.get('Sources') == undefined) {
         var Channel1 = { "link": "http://www.spiegel.de/politik/index.rss", "categories": Array() }
@@ -76,39 +73,49 @@ function createFeedslist(xml) {
     //var channellink = 'https://www.w3schools.com/xml/ajax_xmlfile.asp';
     var channelname = "test2";
     var feeds = xmlDoc.getElementsByTagName("item");
-    var feedsList = new Array(); //creates an array to add every feed into
+    var feedsList = []; //creates an array to add every feed into
 
     //get the informations of the tags of an <item>
-    for (var b = 0; b < feeds.length; b++) {
-        if (feeds[b].getElementsByTagName("link").length == 0) {
+    for (var a = 0; a < feeds.length; a++) {
+        if (feeds[a].getElementsByTagName("link").length == 0) {
             link = "";
         }
         else {
-            link = feeds[b].getElementsByTagName("link")[0].childNodes[0].nodeValue;
+            link = feeds[a].getElementsByTagName("link")[0].childNodes[0].nodeValue;
         }
-        if (feeds[b].getElementsByTagName("title").length == 0) {
+        if (feeds[a].getElementsByTagName("title").length == 0) {
             title = "";
         }
         else {
-            title = feeds[b].getElementsByTagName("title")[0].childNodes[0].nodeValue;
+            title = feeds[a].getElementsByTagName("title")[0].childNodes[0].nodeValue;
         }
-        if (feeds[b].getElementsByTagName("category").length == 0) {
+        if (feeds[a].getElementsByTagName("category").length == 0) {
             category = "";
         }
         else {
-            category = feeds[b].getElementsByTagName("category")[0].childNodes[0].nodeValue;
+            //because there can be more than one category tag, it looks if there is more then one and then adds everyone to string in a loop through all found category tags
+            if (feeds[a].getElementsByTagName("category").length > 1) {
+                category = "";
+                for (var b = 0; b < feeds[a].getElementsByTagName("category").length; b++) {
+                    category += ", " + feeds[a].getElementsByTagName("category")[b].childNodes[0].nodeValue;
+                }
+                category = category.substring(2); //to remove the ", " at the beginning
+            }
+            else {
+                category = feeds[a].getElementsByTagName("category")[0].childNodes[0].nodeValue;
+            }            
         }
-        if (feeds[b].getElementsByTagName("description").length == 0) {
+        if (feeds[a].getElementsByTagName("description").length == 0) {
             description = "";
         }
         else {
-            description = feeds[b].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+            description = feeds[a].getElementsByTagName("description")[0].childNodes[0].nodeValue;
         }
-        if (feeds[b].getElementsByTagName("pubDate").length == 0) {
+        if (feeds[a].getElementsByTagName("pubDate").length == 0) {
             pubDate = "";
         }
         else {
-            pubDate = feeds[b].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue;
+            pubDate = feeds[a].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue;
         }
 
         //add them to an array
@@ -119,17 +126,19 @@ function createFeedslist(xml) {
                 category: category,
                 description: description,
                 pubDate: pubDate
-            });
+            });        
     }
 
+    feedsList = feedsList.filter(filterFeeds);
+
     //create the variable of the left side div (feedoverview)
-    for (var i = 0; i < feedsList.length; i++) {
+    for (var c = 0; c < feedsList.length; c++) {
         listdiv += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-        feedsList[i].link + "'>" +
-        feedsList[i].title + "</a></div><div class='RSS-Item-Category col-xs-2'>" +
-        feedsList[i].category + "</div></div><div class='Row RSS-Item-Content'>" +
-        feedsList[i].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-        feedsList[i].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
+        feedsList[c].link + "'>" +
+        feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+        feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
+        feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+        feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
         channellink + "'>" + channelname + "</a></div></div></div>";
     }
 
@@ -137,4 +146,18 @@ function createFeedslist(xml) {
     document.getElementById("sources").innerHTML = channeldiv; //put the content of the channeldiv variable into the right side div (channeloverview)
 
     return feedsList;
+}
+
+function sortFeeds()
+{
+    
+}
+
+function filterFeeds(feedslist)
+{//Filtermöglichkeiten: 
+    /*Filterplattform (Twitter, Youtube, usw.) (Abfrage des Channelnamens/-links), 
+     *Kategorie (Abfrage des feedslist.category strings), 
+     *Titel (Abfrage des feedslist.title strings)
+     * */
+    return feedslist.title.includes("XML") == false;
 }
