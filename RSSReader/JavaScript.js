@@ -34,12 +34,36 @@ function createFeedslist(xml) {
     }
 
     var channellink = "";
+    var channeldiv = "";
     var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
     for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
 
         var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
         channellink = getChannel.link;
+
+        //creates the Inhalt of the right side div (channel overview)
+        channeldiv += "<div class='RSS-Source Row'><div class='RSS-Thumbnail col-sm-3 alignContainer'><span class='alignhelper'></span><img src='blacla.png' class='aligner' /></div>" +
+        "<div class='RSS-Link col-sm-7 alignContainer'><span class='alignHelper'></span><a class='aligner' href='" + channellink + "'>" +
+        "Tagesschau</a></div>" + "<div class='RSS-Subscription col-sm-2 alignContainer'><span class='alignHelper'></span><input type='checkbox' class='aligner' /></div></div>";
     }
+    
+    //Blueprint of channeloverview
+    /*<div class="RSS-Source Row">
+        <div class="RSS-Thumbnail col-sm-3 alignContainer">
+            <span class="alignHelper"></span>
+            <img src="blacla.png" class="aligner" />
+        </div>
+        <div class="RSS-Link col-sm-7 alignContainer">
+            <span class="alignHelper"></span>
+            <a class="aligner">
+                Tagesschau
+            </a>
+        </div>
+        <div class="RSS-Subscription col-sm-2 alignContainer">
+            <span class="alignHelper"></span>
+            <input type="checkbox" class="aligner" />
+        </div>
+    </div>*/
 
 
     var link = "";
@@ -48,11 +72,13 @@ function createFeedslist(xml) {
     var description = "";
     var pubDate = "";
     var xmlDoc = xml.responseXML;
-    var listdiv = "<div class='feed col-xs-8'>";
+    var listdiv = "";
     //var channellink = 'https://www.w3schools.com/xml/ajax_xmlfile.asp';
     var channelname = "test2";
     var feeds = xmlDoc.getElementsByTagName("item");
     var feedsList = new Array(); //creates an array to add every feed into
+
+    //get the informations of the tags of an <item>
     for (var b = 0; b < feeds.length; b++) {
         if (feeds[b].getElementsByTagName("link").length == 0) {
             link = "";
@@ -85,6 +111,7 @@ function createFeedslist(xml) {
             pubDate = feeds[b].getElementsByTagName("pubDate")[0].childNodes[0].nodeValue;
         }
 
+        //add them to an array
         feedsList.push(
             {
                 link: link,
@@ -95,7 +122,7 @@ function createFeedslist(xml) {
             });
     }
 
-
+    //create the variable of the left side div (feedoverview)
     for (var i = 0; i < feedsList.length; i++) {
         listdiv += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
         feedsList[i].link + "'>" +
@@ -105,10 +132,9 @@ function createFeedslist(xml) {
         feedsList[i].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
         channellink + "'>" + channelname + "</a></div></div></div>";
     }
-    listdiv += "</div>";
 
-    document.getElementById("feed").innerHTML = listdiv;
-    document.getElementById("sources").innerHTML = sourcelist;
+    document.getElementById("feed").innerHTML = listdiv; //put the content of the listdiv variable into the left side div (feedoverview)
+    document.getElementById("sources").innerHTML = channeldiv; //put the content of the channeldiv variable into the right side div (channeloverview)
 
     return feedsList;
 }

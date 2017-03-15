@@ -7,6 +7,7 @@
 }
 
 <script src="~/Scripts/js.cookie.js"></script>
+<script src="~/JavaScript.js"></script>
 <script>
     function UnSubscribe(id) {
         if ($('#icon' + id).attr('add') !== undefined && $('icon' + id).attr('add') !== false) {
@@ -54,33 +55,7 @@
 
     $(document).ready(function () {
         getItems();
-        getFeeds();
-        Cookies.remove('Sources');
-        if (Cookies.get('Sources') == undefined) {
-            var Channel1 = { "link": "http://www.spiegel.de/politik/index.rss", "categories": Array() }
-            var Channel2 = { "link": "https://www.heise.de/newsticker/heise.rdf", "categories": Array() }
-            var Channel3 = { "link": "http://rss.sueddeutsche.de/app/service/rss/alles/index.rss", "categories": Array() }
-            var Channel4 = { "link": "http://www.bmwi.de/SiteGlobals/BMWI/Functions/RSSFeed/DE/RSSFeed-Kompakt.xml;jsessionid=649E32E3D68C44F9A088A1CACD230538", "categories": Array() }
-            var Channels = { "channel": Array() };
-            Channels.channel[0] = JSON.stringify(Channel1);
-            Channels.channel[1] = JSON.stringify(Channel2);
-            Channels.channel[2] = JSON.stringify(Channel3);
-            Channels.channel[3] = JSON.stringify(Channel4);
-            alert(Channels.channel.length);
-            Cookies.set('Sources', JSON.stringify(Channels));
-        }
-
-        var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
-
-        for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
-
-            var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
-
-            for (var j = 0; j < getChannel.categories.length; j++) { //runs through all the saved categories for that channel
-                string += getChannel.categories[j];
-            }
-        }
-
+        getFeeds();   
 });
 
     function addFeed(link) {
@@ -124,7 +99,7 @@
 
 </div>
 <div class="sources col-xs-4" id="sources">
-
+    
 </div>
 <div id="cookie">
 
