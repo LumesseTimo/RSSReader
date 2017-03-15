@@ -29,7 +29,6 @@ function createFeedslist(xml) {
         Channels.channel[1] = JSON.stringify(Channel2);
         Channels.channel[2] = JSON.stringify(Channel3);
         Channels.channel[3] = JSON.stringify(Channel4);
-        alert(Channels.channel.length);
         Cookies.set('Sources', JSON.stringify(Channels));
     }
 
@@ -48,7 +47,7 @@ function createFeedslist(xml) {
     var description = "";
     var pubDate = "";
     var xmlDoc = xml.responseXML;
-    var listdiv = "<div class='feed col-xs-8'>";
+    var listdiv = "";
     //var channellink = 'https://www.w3schools.com/xml/ajax_xmlfile.asp';
     var channelname = "test2";
     var feeds = xmlDoc.getElementsByTagName("item");
@@ -105,10 +104,9 @@ function createFeedslist(xml) {
         feedsList[i].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
         channellink + "'>" + channelname + "</a></div></div></div>";
     }
-    listdiv += "</div>";
 
     document.getElementById("feed").innerHTML = listdiv;
-    document.getElementById("sources").innerHTML = sourcelist;
+    //document.getElementById("sources").innerHTML = sourcelist;
 
     return feedsList;
 }

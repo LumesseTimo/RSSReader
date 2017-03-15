@@ -11,7 +11,10 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    <!--<script src="~/Scripts/js.cookie.js"></script>-->
+
+    <script src="~/Scripts/js.cookie.js"></script>
+    <script src="~/Scripts/JavaScript_1.js"></script>
+    <script src="~/JavaScript.js"></script>
 </head>
 <body>
     <div class="navbar navbar-fixed-top nav-styling">
@@ -19,12 +22,9 @@
             RSS-Reader <span class="glyphicon glyphicon-book"></span>
         </div>
         <div class="col-xs-4 SortFilter">
-            <div class="btn btn-styling">
-                Sortieren
-            </div><br />
-            <div class="btn btn-styling">
-                Filtern
-            </div>
+            <button class="btn btn-styling" data-toggle="modal" data-target="#FilterFeedModal">
+                Filter
+            </button>
         </div>
     </div>
     <div class="container body-content">
@@ -35,6 +35,71 @@
             &copy; Timo Scheile, Lukas Knapp
         </div>
     </footer>
+    <div class="modal fade" id="NewFeedModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Add Custom Feed
+                </div>
+                <form>
+                    <div class="modal-body" id="NewFeedDiv">
+
+                        <div class="form-group">
+                            <label for="link">Link</label>
+                            <input type="text" class="form-control" name="link" id="NewFeedLink" placeholder="exapmple-link.com/RSS" />
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Categories</label>
+                            <input type="text" class="form-control" name="category" id="NewFeedCategory" placeholder="Category1, Category2, [...]" />
+                            <small class="text-muted">Seperate Categories by ','</small>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="reset" class="btn" data-dismiss="modal" value="Close" />
+                        <input type="submit" class="btn" value="Save changes" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="FilterFeedModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Filter Feed
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    <div class="form-group">
+                        <label for="sources">Sources</label>
+                        <input type="text" class="form-control" name="sources" id="FilterChannels" placeholder="YouTube, CNN, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="ChannelsExclude" id="ChannelsExclude" />Exclude given sources</small><br />
+                    </div>
+                    <div class="form-group">
+                        <label for="categories">Categories</label>
+                        <input type="text" class="form-control" name="categories" id="FilterCategories" placeholder="News, Politics, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="CategoriesExclude" id="CategoriesExclude" />Exclude given categories</small><br />
+                    </div>
+                    <div class="form-group">
+                        <label for="titles">Titles</label>
+                        <input type="text" class="form-control" name="titles" id="FilterTitles" placeholder="Donald Trump, US-Army, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="TitlesExclude" id="TitlesExclude" />Exclude given titles</small><br />
+                    </div>
+
+                    <small class="text-muted">
+                        Seperate enties by ','
+                    </small>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn" data-dismiss="modal" onclick="filterResults()">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
