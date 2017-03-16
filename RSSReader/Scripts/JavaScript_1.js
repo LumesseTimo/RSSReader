@@ -11,20 +11,20 @@
         }
     }
 
-    $(document).ready(
-        function(){
-            $.get("Home/GETRSS", function (data) {
-                $(data).find("item").each(function () { // or "item" or whatever suits your feed
-                    var el = $(this);
+    //$(document).ready(
+    //    function(){
+    //        $.get("Home/GETRSS", function (data) {
+    //            $(data).find("item").each(function () { // or "item" or whatever suits your feed
+    //                var el = $(this);
 
-                    console.log("------------------------");
-                    console.log("title      : " + el.find("title").text());
-                    console.log("author     : " + el.find("author").text());
-                    console.log("description: " + el.find("description").text());
-                });
-            });
-        }
-    );
+    //                console.log("------------------------");
+    //                console.log("title      : " + el.find("title").text());
+    //                console.log("author     : " + el.find("author").text());
+    //                console.log("description: " + el.find("description").text());
+    //            });
+    //        });
+    //    }
+    //);
 
     function getFeeds() {
 

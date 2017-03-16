@@ -8,13 +8,13 @@ function loadFeeds() {
         $(data).find("item").each(function () { // or "item" or whatever suits your feed
             var feed = $(this);
 
-            feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-            feed.find("link").text() + "'>" +
-            feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-            feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
-            feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-            feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'";
-
+            feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='"
+            + feed.find("link").text() + "'>"
+            + feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='"
+            + feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>"
+            + feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>"
+            + feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'>";
+            console.log(feedDivContent);
             //console.log("------------------------");
             //console.log("title      : " + feed.find("link").text());
             //console.log("author     : " + feed.find("title").text());
@@ -22,8 +22,8 @@ function loadFeeds() {
             //console.log("author     : " + feed.find("description").text());
             //console.log("description: " + feed.find("pubDate").text());
         });
+        document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);   
     })
-    document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
 }
 //    var xhttp = new XMLHttpRequest();
 //    xhttp.onreadystatechange = function () {
