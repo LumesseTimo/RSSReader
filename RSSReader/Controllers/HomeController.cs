@@ -13,6 +13,14 @@ namespace RSSReader.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult GETRSS(string link)
+        {
+            ViewBag.Link = link;
+
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
