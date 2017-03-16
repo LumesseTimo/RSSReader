@@ -10,7 +10,7 @@ function loadFeeds() {
         }
     };
 
-    xhttp.open("GET", "/Content/test.xml", true);
+    xhttp.open("GET", "/Home/GETRSS", true);
     xhttp.send();
 }
 
@@ -68,13 +68,18 @@ function createFeedsList(xml) {
     var category = "";
     var description = "";
     var pubDate = "";
-    var xmlDoc = xml.responseXML;
+
+    var p = new DOMParser();
+    var xmlDoc = p.parseFromString(xml.responseText, 'application/rss+xml'); // and now it is an XML document
+    //var xmlDoc = jQuery.parseXML(xml.responseText+"</xml>");
+    alert(xml.responseText);
     var listdiv = "";
     //var channellink = 'https://www.w3schools.com/xml/ajax_xmlfile.asp';
     var channelname = "test2";
     var feeds = xmlDoc.getElementsByTagName("item");
+    alert(xmlDoc.getElementsByTagName("description").length);
     var feedsList = []; //creates an array to add every feed into
-
+    alert(feeds.length);
     //get the informations of the tags of an <item>
     for (var a = 0; a < feeds.length; a++) {
         if (feeds[a].getElementsByTagName("link").length == 0) {

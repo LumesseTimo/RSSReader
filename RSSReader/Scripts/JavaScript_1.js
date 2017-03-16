@@ -11,6 +11,21 @@
         }
     }
 
+    $(document).ready(
+        function(){
+            $.get("Home/GETRSS", function (data) {
+                $(data).find("item").each(function () { // or "item" or whatever suits your feed
+                    var el = $(this);
+
+                    console.log("------------------------");
+                    console.log("title      : " + el.find("title").text());
+                    console.log("author     : " + el.find("author").text());
+                    console.log("description: " + el.find("description").text());
+                });
+            });
+        }
+    );
+
     function getFeeds() {
 
         $.ajax({
@@ -61,27 +76,21 @@
 });
 
     function addFeed(link) {
-        var NewChannel = { "link": link, "categories": Array() };
-        if (document.getElementsByName('Category') != null && document.getElementsByName('Category') != undefined) {
-            for (var i = 0; i < document.getElementsByName('Category').length; i++) {
-                NewChannel.categories[NewChannel.categories.length - 1] = document.getElementsByName('Category')[i].value;
+        if (link == null) {
+            var NewChannel = { "link": link, "categories": Array() };
+            if (document.getElementsByName('Category') != null && document.getElementsByName('Category') != undefined) {
+                for (var i = 0; i < document.getElementsByName('Category').length; i++) {
+                    NewChannel.categories[NewChannel.categories.length - 1] = document.getElementsByName('Category')[i].value;
+                }
             }
         }
-        var Channels = Cookies.getJSON('Sources');
-        Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel);
-        Cookies.set('Sources', JSON.stringify(Channels));
-
-        var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
-        var string="";
-        for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
-
-            var getChannel = JSON.parse(getChannels.channel[i]); //creates a JSON-object for the current channel
-            string += getChannel.link+"</br>";
-            for (var j = 0; j < getChannel.categories.length; j++) { //runs through all the saved categories for that channel
-                /* INSERT STUFF YOU WANT TO DO WITH THE CATEGORIES */
-            }
+        else {
+            var NewChannel = { "link": link, "categories": Array() };
+            var Channels = Cookies.getJSON('Sources');
+            Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel);
+            Cookies.set('Sources', JSON.stringify(Channels));
         }
-        $("#cookie").html(string);
+
     }
 
     function removeFeed(link) {
@@ -96,14 +105,5 @@
                 break;
             }
         }
-    }
-
-    function addCategory() {
-        var oldHTML = $('#NewFeedDiv').html();
-        var newHTML = oldHTML.substring(0, oldHTML.indexOf('<span class="glyphicon glyphicon-plus-sign input-group-addon btn" onclick="addCategory()"></span>'));
-        newHTML += '</div></div></div><div class="form-group"><div class="input-group category"><input type="text" class="form-control" name="Category" />';
-        newHTML += oldHTML.substring(oldHTML.indexOf('<span class="glyphicon glyphicon-plus-sign input-group-addon btn" onclick="addCategory()"></span>'), oldHTML.length - 1);
-
-        $('#NewFeedDiv').html(newHTML);
     }
 

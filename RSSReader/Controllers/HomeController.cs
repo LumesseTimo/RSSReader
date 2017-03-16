@@ -12,8 +12,7 @@ namespace RSSReader.Controllers
         {
             return View();
         }
-
-        [HttpPost]
+        
         public ActionResult GETRSS(string link)
         {
             ViewBag.Link = link;
