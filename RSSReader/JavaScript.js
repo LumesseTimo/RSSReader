@@ -93,7 +93,7 @@ function createFeedsList(xml) {
             category = "";
         }
         else {
-            //because there can be more than one category tag, it looks if there is more then one and then adds everyone to string in a loop through all found category tags
+            //because there can be more than one category tag, it looks if there is more than one and then adds everyone to string in a loop through all found category tags
             if (feeds[a].getElementsByTagName("category").length > 1) {
                 category = "";
                 for (var b = 0; b < feeds[a].getElementsByTagName("category").length; b++) {
@@ -125,13 +125,19 @@ function createFeedsList(xml) {
                 title: title,
                 category: category,
                 description: description,
-                pubDate: pubDate
+                pubDate: pubDate,
+                channellink: channellink,
+                channelname: channelname
             });        
     }
+    var testtitle = "ML";
+    var testcategory = "B-MOVIE";
+    var testfeed = "test2";
+    feedsList = feedsList.filter(filterFeedsbyTitle, testtitle);
+    feedsList = feedsList.filter(filterFeedsByCategory, testcategory);
+    feedsList = feedsList.filter(filterFeedsByChannelName, testfeed);
 
-    feedsList = feedsList.filter(filterFeeds);
-
-    //create the variable of the left side div (feedoverview)
+    //create the content of variable for the left side div (feedoverview)
     for (var c = 0; c < feedsList.length; c++) {
         listdiv += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
         feedsList[c].link + "'>" +
@@ -144,8 +150,6 @@ function createFeedsList(xml) {
 
     document.getElementById("feed").innerHTML = listdiv; //put the content of the listdiv variable into the left side div (feedoverview)
     document.getElementById("sources").innerHTML = channeldiv; //put the content of the channeldiv variable into the right side div (channeloverview)
-
-    return feedsList;
 }
 
 function sortFeeds()
@@ -153,11 +157,27 @@ function sortFeeds()
     
 }
 
-function filterFeeds(feedslist)
+function filterFeedsbyTitle(feedsList)
 {//Filtermöglichkeiten: 
     /*Filterplattform (Twitter, Youtube, usw.) (Abfrage des Channelnamens/-links), 
      *Kategorie (Abfrage des feedslist.category strings), 
      *Titel (Abfrage des feedslist.title strings)
      * */
-    return feedslist.title.includes("XML") == false;
+    return feedsList.title.includes(this) == false;
+}
+
+function filterFeedsByCategory(feedsList) {//Filtermöglichkeiten: 
+    /*Filterplattform (Twitter, Youtube, usw.) (Abfrage des Channelnamens/-links), 
+     *Kategorie (Abfrage des feedslist.category strings), 
+     *Titel (Abfrage des feedslist.title strings)
+     * */
+    return feedsList.category.includes(this) == true;
+}
+
+function filterFeedsByChannelName(feedsList) {//Filtermöglichkeiten: 
+    /*Filterplattform (Twitter, Youtube, usw.) (Abfrage des Channelnamens/-links), 
+     *Kategorie (Abfrage des feedslist.category strings), 
+     *Titel (Abfrage des feedslist.title strings)
+     * */
+    return feedsList.channelname.includes(this) == true;
 }
