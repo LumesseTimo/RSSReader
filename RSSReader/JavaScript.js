@@ -4,36 +4,86 @@
 
 function loadFeeds() {
     var feedDivContent = "";
-    $.get("Home/GETRSS", function (data) {
-        $(data).find("item").each(function () { // or "item" or whatever suits your feed
-            var feed = $(this);
 
-//          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-//          feedsList[c].link + "'>" +
-//          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-//          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
-//          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-//          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
-//          channellink + "'>" + channelname + "</a></div></div></div>";
+    request = $.ajax({
+        url: "Home/GETRSS",
+        type: "POST",
+        data: {"link": "http://www.spiegel.de/politik/index.rss"},
+        dataType: "text",
+        success: function (data) {
+            console.log(data);
+            $(data).find("item").each(function () { // or "item" or whatever suits your feed
+                var feed = $(this);
+                console.log(feed);
+                //          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+                //          feedsList[c].link + "'>" +
+                //          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+                //          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
+                //          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+                //          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
+                //          channellink + "'>" + channelname + "</a></div></div></div>";
 
-            feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-            feed.find("link").text() + "'>" +
-            feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-            feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
-            feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-            feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#" +
-             + "'>test</a></div></div></div>";
-            //console.log("------------------------");
-            //console.log("link: " + feed.find("link").text());
-            //console.log("title: " + feed.find("title").text());
-            //console.log("category: " + feed.find("category").text());
-            //console.log("description: " + feed.find("description").text());
-            //console.log("pubDate: " + feed.find("pubDate").text());
-        });
-        console.log(feedDivContent);
-        document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
-    })
-    
+                feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+                feed.find("derlink").text() + "'>" +
+                feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+                feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
+                feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+                feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
+                + "'>test</a></div></div></div>";
+                //console.log("------------------------");
+                //console.log("link: " + feed.find("link").text());
+                //console.log("title: " + feed.find("title").text());
+                //console.log("category: " + feed.find("category").text());
+                //console.log("description: " + feed.find("description").text());
+                //console.log("pubDate: " + feed.find("pubDate").text());
+            });
+            console.log(feedDivContent);
+            document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
+        }
+    });
+
+
+    /*$.ajax({
+        url: 'getRSS',
+        type: 'GET',
+        dataType: 'Text',
+        cache: false,
+        data: { 'link': "http://www.spiegel.de/politik/index.rss" },
+        success: function (data) {
+            $.get("Home/GETRSS", function (data) {
+                $(data).find("item").each(function () { // or "item" or whatever suits your feed
+                    var feed = $(this);
+
+                    //          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+                    //          feedsList[c].link + "'>" +
+                    //          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+                    //          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
+                    //          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+                    //          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
+                    //          channellink + "'>" + channelname + "</a></div></div></div>";
+
+                    feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+                    "#'>" +
+                    feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+                    feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
+                    feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+                    feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
+                    + "'>test</a></div></div></div>";
+                    //console.log("------------------------");
+                    //console.log("link: " + feed.find("link").text());
+                    //console.log("title: " + feed.find("title").text());
+                    //console.log("category: " + feed.find("category").text());
+                    //console.log("description: " + feed.find("description").text());
+                    //console.log("pubDate: " + feed.find("pubDate").text());
+                });
+                console.log(feedDivContent);
+                document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
+            });
+        },
+        error: function () {
+            alert('Error occured');
+        }
+    });*/
 }
 //    var xhttp = new XMLHttpRequest();
 //    xhttp.onreadystatechange = function () {
