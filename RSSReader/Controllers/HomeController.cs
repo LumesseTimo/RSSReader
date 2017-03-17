@@ -11,7 +11,7 @@ namespace RSSReader.Controllers
     public class HomeController : Controller
     {
         [HttpPost]
-        public string getRSS(string link)
+        public string getRSS(string link="")
         {
             WebClient client = new WebClient();
 
@@ -19,7 +19,7 @@ namespace RSSReader.Controllers
             client.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.0.3705;)");
             try
             {
-                string xmlText = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString("http://www.spiegel.de/politik/index.rss")));
+                string xmlText = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(link)));
                 xmlText = xmlText.Replace("<link>", " <derlink>");
                 xmlText = xmlText.Replace("</link>", " </derlink>");
 
@@ -30,16 +30,8 @@ namespace RSSReader.Controllers
                 xmlText = xmlText.Replace("</url>", " </dieurl>");
                 return xmlText;
             }
-            catch (WebException we)
+            catch(Exception)
             {
-                // WebException.Status holds useful information
-                Console.WriteLine(we.Message + "\n" + we.Status.ToString());
-                return null;
-            }
-            catch (NotSupportedException ne)
-            {
-                // other errors
-                Console.WriteLine(ne.Message);
                 return null;
             }
         }

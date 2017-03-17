@@ -76,21 +76,43 @@
 });
 
     function addFeed(link) {
+        var NewChannel;
         if (link == null) {
-            var NewChannel = { "link": link, "categories": Array() };
-            if (document.getElementsByName('Category') != null && document.getElementsByName('Category') != undefined) {
-                for (var i = 0; i < document.getElementsByName('Category').length; i++) {
-                    NewChannel.categories[NewChannel.categories.length - 1] = document.getElementsByName('Category')[i].value;
+
+            $.ajax({
+                url: "Home/GETRSS",
+                type: "POST",
+                data: { "link": $("#NewFeedLink").val() },
+                dataType: "text",
+                success: function (data) {
+                    console.log(($(data).find("channel").length));
+                    if ($(data).find("channel").text() !="") {
+                        var NewCategories = Array();
+                        console.log($("#NewFeedCategory").val().split(",").length);
+                        for (var i = 0; i < $("#NewFeedCategory").val().split(",").length; i++) {
+                            NewCategories[i] = $("#NewFeedCategory").val().split(",")[i].trim();
+                            console.log($("#NewFeedCategory").val().split(",")[i].trim());
+                        }
+
+                        NewChannel = { "link": $("NewFeedLink").val(), "categories": NewCategories };
+                        $("#NewFeedLink").val("");
+                        $("#NewFeedCategory").val("")
+                    }
+                    else {
+                        $("#WrongLinkModal").modal('show');
+                    }
                 }
-            }
+            });
+
+
         }
         else {
-            var NewChannel = { "link": link, "categories": Array() };
-            var Channels = Cookies.getJSON('Sources');
-            Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel);
-            Cookies.set('Sources', JSON.stringify(Channels));
+            NewChannel = { "link": link, "categories": Array() };
         }
-
+        console.log(JSON.stringify(NewChannel));
+        var Channels = Cookies.getJSON('Sources');
+        Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel);
+        Cookies.set('Sources', JSON.stringify(Channels));
     }
 
     function removeFeed(link) {
