@@ -41,7 +41,6 @@
                 <div class="modal-header">
                     Add Custom Feed
                 </div>
-                <form>
                     <div class="modal-body" id="NewFeedDiv">
 
                         <div class="form-group">
@@ -56,10 +55,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        <input type="reset" class="btn" data-dismiss="modal" value="Close" />
-                        <input type="submit" class="btn" value="Save changes" />
+                        <button class="btn" onclick="addFeed()">Add Feed</button>
+                        <button class="btn" data-dismiss="modal">Close</button>
                     </div>
-                </form>
             </div>
         </div>
     </div>
@@ -96,6 +94,24 @@
                 <div class="modal-footer">
                     <button type="reset" class="btn" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn" data-dismiss="modal" onclick="filterResults()">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="WrongLinkModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert-danger">
+                    Link is not RSS
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    The submitted link does not contain a RSS-feed, please check the link you provided
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
                 </div>
             </div>
         </div>

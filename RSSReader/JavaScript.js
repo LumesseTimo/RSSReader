@@ -11,10 +11,8 @@ function loadFeeds() {
         data: {"link": "http://www.spiegel.de/politik/index.rss"},
         dataType: "text",
         success: function (data) {
-            console.log(data);
             $(data).find("item").each(function () { // or "item" or whatever suits your feed
                 var feed = $(this);
-                console.log(feed);
                 //          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
                 //          feedsList[c].link + "'>" +
                 //          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
@@ -28,7 +26,7 @@ function loadFeeds() {
                 feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
                 feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
                 feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-                feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
+                feed.find("pubDate").text(). + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
                 + "'>test</a></div></div></div>";
                 //console.log("------------------------");
                 //console.log("link: " + feed.find("link").text());
@@ -37,11 +35,11 @@ function loadFeeds() {
                 //console.log("description: " + feed.find("description").text());
                 //console.log("pubDate: " + feed.find("pubDate").text());
             });
-            console.log(feedDivContent);
             document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
         }
-    });
 
+    });
+    var a = Date.parse()
 
     /*$.ajax({
         url: 'getRSS',
