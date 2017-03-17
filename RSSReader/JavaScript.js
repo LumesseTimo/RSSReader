@@ -2,86 +2,150 @@
     loadFeeds();
 });
 
-function loadFeeds() {
+function loadFeeds(sourceFilter, categoryFilter, titleFilter, shallFilter, excludeSource, excludeCategory, excludeTitle) {
+    var feedsList = []; //creates an array to add every feed into
     var feedDivContent = "";
+    $.get("Home/GETRSS", function (data) {
+        var channeltitle = $(data).find("title").text();
+        var channellink = $(data).find("link").text();
+        $(data).find("item").each(function () { // or "item" or whatever suits your feed
+            var feed = $(this);
+            shallFilter = false;
+//          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+//          feedsList[c].link + "'>" +
+//          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+//          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
+//          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+//          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
+//          channellink + "'>" + channelname + "</a></div></div></div>";
 
-    request = $.ajax({
-        url: "Home/GETRSS",
-        type: "POST",
-        data: {"link": "http://www.spiegel.de/politik/index.rss"},
-        dataType: "text",
-        success: function (data) {
-            $(data).find("item").each(function () { // or "item" or whatever suits your feed
-                var feed = $(this);
-                //          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-                //          feedsList[c].link + "'>" +
-                //          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-                //          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
-                //          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-                //          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
-                //          channellink + "'>" + channelname + "</a></div></div></div>";
+            if (shallFilter == true)
+            {
+                //if (excludeSource == true)
+                //{
+                //    sourceOkay = false;
+                //}
+                //else
+                //{
+                //    sourceOkay = true;
+                //}
 
-                feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-                feed.find("derlink").text() + "'>" +
-                feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-                feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
-                feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-                feed.find("pubDate").text(). + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
-                + "'>test</a></div></div></div>";
-                //console.log("------------------------");
-                //console.log("link: " + feed.find("link").text());
-                //console.log("title: " + feed.find("title").text());
-                //console.log("category: " + feed.find("category").text());
-                //console.log("description: " + feed.find("description").text());
-                //console.log("pubDate: " + feed.find("pubDate").text());
-            });
-            document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
+                //if (excludeCategory == true)
+                //{
+                //    categoryOkay = false;
+                //}
+                //else
+                //{
+                //    categoryOkay = true;
+                //}
+
+                //if (excludeTitle == true)
+                //{
+                //    titleOkay = false;
+                //}
+                //else
+                //{
+                //    titleOkay = true;
+                //}
+
+                ////^those if/else clauses are so, depending on if someone wants a something to be in the output OR NOT, the bool variables get a first value
+                ////because if the loop never finds anything the Okay variable will never change 
+                ////(and if xOkay starts with false but you want something to be excluded, it would never put xOkay to true)
+                ////but with this you save performance, because you have one query here (to decide the start value of the Okay variables) 
+                ////instead of having one more in each execution of the loops, just so you MAY change the value
+
+                //var sourceOkay = true;
+                //var sourceFilterArray = sourceFilter.split(","); //the (not) wanted titles get seperated
+                //for (var a = 0; a < sourceFilterArray.length; a++)
+                //{
+                //    if (channeltitle.toLowerCase().includes(sourceFilterArray[a].toLowerCase().trim()) == true)//if he finds an accordance/eine Übereinstimmung
+                //    {
+                //        if (excludeSource == false)
+                //        {
+                //            sourceOkay = true;
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            sourceOkay = false;
+                //        }
+                //    }
+                //} 
+
+                //var categoryOkay = true;
+                //var categoryFilterArray = categoryFilter.split(","); //the (not) wanted categorys get seperated
+                //for (var b = 0; b < categoryFilterArray.length; bi++)
+                //{
+                //    if (feed.find("category").text().toLowerCase().includes(categoryFilterArray[b].toLowerCase().trim()) == true)
+                //    {
+                //        if (excludeCategory == false)
+                //        {
+                //            categoryOkay = true;
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            categoryOkay = false;
+                //        }
+                //    }
+                //}
+
+                //var titleOkay = true;
+                //var titleFilterArray = titleFilter.split(","); //the (not) wanted titles get seperated
+                //for (var c = 0; c < titleFilterArray.length; c++)
+                //{
+                //    if (feed.find("title").text().toLowerCase().includes(titleFilterArray[c].toLowerCase().trim()) == true)
+                //    {
+                //        if (excludeTitle == false)
+                //        {
+                //            titleOkay = true;
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            titleOkay = false;
+                //        }
+                //    }
+                //}
+            }
+
+            if (shallFilter == false || (sourceOkay == true && categoryOkay == true && titleOkay == true))
+            {
+                feedsList.push({
+                    link: feed.find("link").text(),
+                    title: feed.find("title").text(),
+                    category: feed.find("category").text(),
+                    description: feed.find("description").text(),
+                    pubDate: feed.find("pubDate").text(),
+                    channellink: channellink,
+                    channeltitle: channeltitle
+                });                
+            }
+            
+            //console.log("------------------------");
+            //console.log("link: " + feed.find("link").text());
+            //console.log("title: " + feed.find("title").text());
+            //console.log("category: " + feed.find("category").text());
+            //console.log("description: " + feed.find("description").text());
+            //console.log("pubDate: " + feed.find("pubDate").text());
+        });
+        
+        feedsList.sort(function (a, b) {
+            return Date.parse(a[4]) - Date.parse(b[4])
+        });
+
+        for (var d = 0; d < feedsList.length; d++) {
+            feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
+            feedsList[d].link + "'>" +
+            feedsList[d].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
+            feedsList[d].category + "'>" + feedsList[d].category + "</div></div><div class='Row RSS-Item-Content'>" +
+            feedsList[d].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
+            feedsList[d].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" + channellink + "'>" + channeltitle + "</a></div></div></div>";
         }
 
-    });
-    var a = Date.parse()
-
-    /*$.ajax({
-        url: 'getRSS',
-        type: 'GET',
-        dataType: 'Text',
-        cache: false,
-        data: { 'link': "http://www.spiegel.de/politik/index.rss" },
-        success: function (data) {
-            $.get("Home/GETRSS", function (data) {
-                $(data).find("item").each(function () { // or "item" or whatever suits your feed
-                    var feed = $(this);
-
-                    //          feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-                    //          feedsList[c].link + "'>" +
-                    //          feedsList[c].title + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-                    //          feedsList[c].category + "'>" + feedsList[c].category + "</div></div><div class='Row RSS-Item-Content'>" +
-                    //          feedsList[c].description + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-                    //          feedsList[c].pubDate + "</div><div class='col-xs-9 RSS-Item-Source'><a href='" +
-                    //          channellink + "'>" + channelname + "</a></div></div></div>";
-
-                    feedDivContent += "<div class='RSS-Item Row'><div class='Row RSS-Item-Header'><div class='RSS-Item-Title col-xs-10'><a href='" +
-                    "#'>" +
-                    feed.find("title").text() + "</a></div><div class='RSS-Item-Category col-xs-2' title='" +
-                    feed.find("category").text() + "'>" + feed.find("category").text() + "</div></div><div class='Row RSS-Item-Content'>" +
-                    feed.find("description").text() + "</div><div class='Row RSS-Item-Footer'><div class='col-xs-3 RSS-Item-Date'>" +
-                    feed.find("pubDate").text() + "</div><div class='col-xs-9 RSS-Item-Source'><a href='#"
-                    + "'>test</a></div></div></div>";
-                    //console.log("------------------------");
-                    //console.log("link: " + feed.find("link").text());
-                    //console.log("title: " + feed.find("title").text());
-                    //console.log("category: " + feed.find("category").text());
-                    //console.log("description: " + feed.find("description").text());
-                    //console.log("pubDate: " + feed.find("pubDate").text());
-                });
-                console.log(feedDivContent);
-                document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
-            });
-        },
-        error: function () {
-            alert('Error occured');
-        }
-    });*/
+        document.getElementById("feed").innerHTML = feedDivContent; //put the content of the listdiv variable into the left side div (feedoverview);
+    })
+    
 }
 //    var xhttp = new XMLHttpRequest();
 //    xhttp.onreadystatechange = function () {
