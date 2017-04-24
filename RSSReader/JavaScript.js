@@ -5,14 +5,14 @@
 function loadFeeds(sourceFilter, categoryFilter, titleFilter, shallFilter, excludeSource, excludeCategory, excludeTitle) {
     var feedsList = []; //creates an array to add every feed into
     var feedDivContent = "";
-    $.ajax({
+    request = $.ajax({
         url: "Home/GETRSS",
         type: "POST",
         data: { "link": "http://www.spiegel.de/politik/index.rss" },
         dataType: "text",
         success: function (data) {
-            var channeltitle = $(data).find("title:first").text();
-            var channellink = $(data).find("derlink").first().text();
+            var channeltitle = $(data).find("title").text();
+            var channellink = $(data).find("link").text();
             $(data).find("item").each(function () { // or "item" or whatever suits your feed
                 var feed = $(this);
                 shallFilter = false;
@@ -115,7 +115,7 @@ function loadFeeds(sourceFilter, categoryFilter, titleFilter, shallFilter, exclu
 
                 if (shallFilter == false || (sourceOkay == true && categoryOkay == true && titleOkay == true)) {
                     feedsList.push({
-                        link: feed.find("derlink").text(),
+                        link: feed.find("link").text(),
                         title: feed.find("title").text(),
                         category: feed.find("category").text(),
                         description: feed.find("description").text(),
