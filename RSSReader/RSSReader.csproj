@@ -157,10 +157,14 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\001-animals-1.ico" />
+    <Content Include="Content\Images\001-animals-1.png" />
+    <Content Include="Content\Images\001-animals-1.svg" />
     <Content Include="Content\Images\arrowdown.PNG" />
     <Content Include="Content\Images\arrowdownhover.png" />
     <Content Include="Content\Images\arrowup.PNG" />
     <Content Include="Content\Images\arrowuphover.png" />
+    <Content Include="Content\Images\ring-alt.svg" />
     <Content Include="Content\Images\^56F157C978BC63135F358D94A45ED38EA3585C44E40315870E^pimgpsh_fullsize_distr.jpg" />
     <Content Include="Content\StyleSheet.css" />
     <Content Include="Content\test.xml">
@@ -177,6 +181,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\filesaver.js" />
     <Content Include="Scripts\JavaScript_1.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -188,6 +193,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\sjcl.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

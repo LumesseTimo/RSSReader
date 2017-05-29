@@ -28,6 +28,10 @@ namespace RSSReader.Controllers
 
                 xmlText = xmlText.Replace("<url>", " <dieurl>");
                 xmlText = xmlText.Replace("</url>", " </dieurl>");
+
+                xmlText = xmlText.Replace("<![CDATA[", "");
+                xmlText = xmlText.Replace("]]>", "");
+
                 return xmlText;
             }
             catch(Exception)
