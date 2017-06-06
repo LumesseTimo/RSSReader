@@ -12,9 +12,8 @@
     }
 }
 
-function UnSubscribe(elem, link, name) { //function for when you click the little icon at the right side of the channel div
-
-    var categories = Array.prototype.slice(arguments, 2);
+function UnSubscribe(elem, link, name, categories) { //function for when you click the little icon at the right side of the channel div
+    //var categories = Array.prototype.slice(arguments, 2);
     console.log(arguments);
 
         if (elem.hasAttribute('add')) { //if that clicked element has the attribute "add"
@@ -59,27 +58,44 @@ function UnSubscribe(elem, link, name) { //function for when you click the littl
                             $('#NewFeedName').val($(data).find("title").first().text());
                         }
 
-                        NewChannel = { "link": $("#NewFeedLink").val(), "name": $('#NewFeedName').val(), "categories": NewCategories }; //creating a new channel with the link and the categories the user added
-
-                        addToFeedsList($("#NewFeedLink").val(), $('#NewFeedName').val(), NewCategories); //adds the channel to the feeds list
-
-                        $("#NewFeedLink").val(""); //empties the input field
-                        $("#NewFeedCategory").val(""); //empties the input field
-                        $("#NewFeedName").val(""); //empties the input field
-
                         if (Cookies.getJSON('Sources') != undefined) { //checks if there is already a cookie
                             var Channels = Cookies.getJSON('Sources'); //if so, get's the contents of that cookie
                         }
+
                         else {
                             var Channels = { "channel": Array() }; // if not, creates the blueprint for that cookie
                         }
-                        Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel); //adds the new Channel to the array of channels
-                        Cookies.set('Sources', JSON.stringify(Channels), { expires: 3650 }); //sets the cookie with an expiry time of 10 years
 
-                        $('.loading').show(); //show the loading screen
-                        setTimeout(loadFeeds(true), 10); //load the feedslist
+                        var isNewChannel = true; // creates a bool variable for testing if a channel already exists
+                        for (var b = 0; b < Channels.channel.length; b++) {
+                            var currentChannel = JSON.parse(Channels.channel[b])
+                            if (currentChannel.link == $("#NewFeedLink").val()) {
+                                isNewChannel = false;
+                                break;
+                            }
+                        }
 
-                        $("#SuccessModal").modal('show'); //show that the link has been successfully added
+                        if (isNewChannel == true) { //if there is not already a channel with same link
+                            NewChannel = { "link": $("#NewFeedLink").val(), "name": $('#NewFeedName').val(), "categories": NewCategories, "image": $(data).find("dieurl").first().text() }; //creating a new channel with the link and the categories the user added
+    
+                            addToFeedsList($("#NewFeedLink").val(), $('#NewFeedName').val(), NewCategories); //adds the channel to the feeds list
+
+                            $("#NewFeedLink").val(""); //empties the input field
+                            $("#NewFeedCategory").val(""); //empties the input field
+                            $("#NewFeedName").val(""); //empties the input field
+
+                            Channels.channel[Channels.channel.length] = JSON.stringify(NewChannel); //adds the new Channel to the array of channels
+                            Cookies.set('Sources', JSON.stringify(Channels), { expires: 3650 }); //sets the cookie with an expiry time of 10 years
+
+                            $('.loading').show(); //show the loading screen
+                            setTimeout(loadFeeds(true), 10); //load the feedslist      
+
+                            $("#SuccessModal").modal('show'); //show that the link has been successfully added
+                        }
+
+                        else {
+                            $("#LinkAlreadyExistsModal").modal('show'); //show that the channel already exists
+                        }
                     }
                     else {
                         $("#WrongLinkModal").modal('show'); //show that the link provided did not contain a rss-feed
@@ -105,7 +121,6 @@ function UnSubscribe(elem, link, name) { //function for when you click the littl
     }
 
     function removeFeed(link) {
-
         var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Object, which is saved in the Cookie "Sources"
         for (var i = 0; i < getChannels.channel.length; i++) { //runs through all the channels saved in that Cookie
 
@@ -149,7 +164,12 @@ function UnSubscribe(elem, link, name) { //function for when you click the littl
             success: function (data) {
                 var imageUrl = $(data).find("dieurl").first().text();
                 var sitelink = $(data).find("derlink").first().text();
-                sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + '">' + name + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span> <span class="glyphicon glyphicon-pencil" onclick="OpenEdit("' + link + '")" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>';
+
+                if (imageUrl == "" || imageUrl == null) {
+                    imageUrl = "/Content/Images/noPictureAvailable.jpg";
+                }
+
+                sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + ' title="' + name + '">' + name + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span> <span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + link + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>';
                 $('#sources').html($('#sources').html() + sourceshtml);
             }
         });

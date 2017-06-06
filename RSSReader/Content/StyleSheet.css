@@ -243,7 +243,6 @@ body{
 
 .nav-styling{
     background: #8BC34A;
-    border-bottom: 1px solid black;
     color: white;
 }
 
@@ -255,10 +254,30 @@ body{
 }
 
 .SortFilter{
-    height: 100%;
-    padding: 0;
+    height: 70px;
+    padding: 0px;
     border-left: 1px solid black;
     overflow: hidden;
+}
+
+.FiltersField{
+    height: 100%;
+    padding: 0;
+}
+
+#FilterButton{
+    padding-right: 3px;
+    height: 100%;
+    width: 100%;
+    border-radius: 0px;
+}
+#FilterButtonDiv{
+    padding-right: 3px;
+}
+
+.FilterRows{
+    vertical-align: middle;
+    height: 37%;
 }
 
 .btn-styling{
