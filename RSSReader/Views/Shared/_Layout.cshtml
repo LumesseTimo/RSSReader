@@ -62,12 +62,12 @@
                 Newsbird <img src="~/Content/Images/001-animals-1.svg" class="logo" />
             </div>
             <div class="col-xs-4 SortFilter">
-                    <div class="col-xs-4 FiltersField" id="FilterButtonDiv">
+                    <div class="col-xs-12 col-sm-6 FiltersField" id="FilterButtonDiv">
                         <button class="btn btn-styling" id="FilterButton" data-toggle="modal" data-target="#FilterFeedModal">
                             Filter
                         </button>
                     </div>
-                    <div class="col-xs-8 FiltersField">
+                    <div class="col-xs-0 col-sm-6 FiltersField">
                         <div class="row FilterRows">
                             <div class="col-xs-12" id="FilteredSources">
                                 Sources: 
@@ -146,7 +146,10 @@
                         <input type="text" class="form-control" name="category" id="NewFeedCategory" placeholder="Category1, Category2, [...]" />
                         <small class="text-muted">Seperate Categories by ','</small>
                     </div>
+                </div>
 
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal">Close</button>
                     <button class="btn" onclick="addFeed()">Add Feed</button>
                 </div>
             </div>

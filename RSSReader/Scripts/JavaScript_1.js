@@ -12,8 +12,8 @@
     }
 }
 
-function UnSubscribe(elem, link, name, categories) { //function for when you click the little icon at the right side of the channel div
-    //var categories = Array.prototype.slice(arguments, 2);
+function UnSubscribe(elem, link, name) { //function for when you click the little icon at the right side of the channel div
+    var categories = Array.prototype.slice(arguments, 2);
     console.log(arguments);
 
         if (elem.hasAttribute('add')) { //if that clicked element has the attribute "add"
@@ -88,7 +88,7 @@ function UnSubscribe(elem, link, name, categories) { //function for when you cli
                             Cookies.set('Sources', JSON.stringify(Channels), { expires: 3650 }); //sets the cookie with an expiry time of 10 years
 
                             $('.loading').show(); //show the loading screen
-                            setTimeout(loadFeeds(true), 10); //load the feedslist      
+                            setTimeout(loadFeeds(true, false), 10); //load the feedslist      
 
                             $("#SuccessModal").modal('show'); //show that the link has been successfully added
                         }
@@ -138,22 +138,28 @@ function UnSubscribe(elem, link, name, categories) { //function for when you cli
 
     function addToFeedsList(link, name) {
         
-        var categories = Array.prototype.slice(arguments, 2);
+        if (Object.prototype.toString.call(arguments[2]) === '[object Array]') {
+            var categories = arguments[2];
+        }
+        else {
+            var categories = Array.prototype.slice(arguments, 2);
+        }
+
         var categoriesStr = "";
 
         $('#sources').html($('#sources').html().substring(0, $('#sources').html().lastIndexOf('<div class="RSS-Source Row btn" data-toggle="modal" data-target="#NewFeedModal">')));
 
         for (var c = 0 ; c < categories.length; c++) { //for each element in the category-array
-            categoriesStr += "'"+getChannel.categories[c] + "', ";  //adds the name of the category followed by a comma and a space
+            categoriesStr += "'"+categories[c] + "', ";  //adds the name of the category followed by a comma and a space
         }
 
-        while (categories.length > 0 && categories.lastIndexOf(", ") >= categories.length - 2) { //while the last occurence of ", " is at the very end of the string
-            categories = categories.substring(0, categories.length - 2); //remove the ", " from the string
+        while (categoriesStr.length > 0 && categoriesStr.lastIndexOf(", ") >= categoriesStr.length - 2) { //while the last occurence of ", " is at the very end of the string
+            categoriesStr = categoriesStr.substring(0, categoriesStr.length - 2); //remove the ", " from the string
         }
 
         var sourceshtml;
 
-        parameters = "'" + link + "', '" + name + "', " + categories;
+        parameters = "'" + link + "', '" + name + "', " + categoriesStr;
 
         request = $.ajax({
             url: "Home/GETRSS",
@@ -169,7 +175,7 @@ function UnSubscribe(elem, link, name, categories) { //function for when you cli
                     imageUrl = "/Content/Images/noPictureAvailable.jpg";
                 }
 
-                sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + ' title="' + name + '">' + name + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span> <span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + link + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>';
+                sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 hidden-xs alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-xs-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + '" title="' + name + '">' + name + '</a></div><div class="RSS-Subscription col-sm-2 col-xs-5 alignContainer"><span class="alignHelper"></span><span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + link + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>'; //builds the div for the channel
                 $('#sources').html($('#sources').html() + sourceshtml);
             }
         });
