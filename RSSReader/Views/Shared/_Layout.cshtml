@@ -21,7 +21,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/Content/Images/001-animals-1.png">
 </head>
 <body>
-    
+
     <div class="modal fade" id="EditModal" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -32,7 +32,7 @@
                     <input type="hidden" id="editFeedID" />
                     <div class="form-group">
                         <label for="editLink">Link</label>
-                        <input type="text" class="form-control" name="editLink" id="editLink" placeholder="exapmple-link.com/RSS" required />
+                        <input type="text" class="form-control" name="editLink" id="editLink" placeholder="example-link.com/RSS" required />
                     </div>
                     <div class="form-group">
                         <label for="editName">Name</label>
@@ -45,163 +45,221 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn" data-dismiss="modal" onclick="loadFeeds(true)">Edit</button>
+                    <button type="submit" class="btn" data-dismiss="modal" onclick="EditFeed(true)">Edit</button>
                 </div>
             </div>
         </div>
     </div>
-                    <div class="loading">
-                        Loading<span class="loadingdots">...</span>
-                        <div class="progress customProgress progress-striped active">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="loadingProgress"></div>
-                        </div>
+    <div class="loading">
+        Loading<span class="loadingdots">...</span>
+        <div class="progress customProgress progress-striped active">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="loadingProgress"></div>
+        </div>
+    </div>
+    <div class="navbar navbar-fixed-top nav-styling">
+        @*<div class="row">*@
+            <div class="col-xs-8 Page-Title">
+                Newsbird <img src="~/Content/Images/001-animals-1.svg" class="logo" />
+            </div>
+            <div class="col-xs-4 SortFilter">
+                    <div class="col-xs-4 FiltersField" id="FilterButtonDiv">
+                        <button class="btn btn-styling" id="FilterButton" data-toggle="modal" data-target="#FilterFeedModal">
+                            Filter
+                        </button>
                     </div>
-                    <div class="navbar navbar-fixed-top nav-styling">
-                        <div class="col-xs-8 Page-Title">
-                            Newsbird <img src="~/Content/Images/001-animals-1.svg" class="logo" />
+                    <div class="col-xs-8 FiltersField">
+                        <div class="row FilterRows">
+                            <div class="col-xs-12" id="FilteredSources">
+                                Sources: 
+                            </div>
                         </div>
-                        <div class="col-xs-4 SortFilter">
-                            <button class="btn btn-styling" data-toggle="modal" data-target="#FilterFeedModal">
-                                Filter
-                            </button>
+                        <div class="row FilterRows">
+                            <div class="col-xs-12" id="FilteredCategories">
+                                Categories: 
+                            </div>
                         </div>
-                    </div>
-                    <div class="container body-content">
-                        @RenderBody()
-                    </div>
-                    <footer class="nav-styling">
-                        <div class="copyright col-xs-8">
-                            &copy; Timo Scheile, Lukas Knapp
-                        </div>
-                        <div class="pull-right btn btn-styling" data-toggle="modal" data-target="#ImExportModal">
-                            Im/Export Feedslist
-                        </div>
-                    </footer>
-                    <div class="modal fade" id="ImExportModal" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header custom-modal-header">
-                                    Im-/Export Feedslist
-                                </div>
-                                <div class="modal-body">
-                                    Your Feedsslist is stored locally in your cookies. If you want to switch Browsers or your Operating system altogether, you can Im-/Export your list here.
-                                    <hr />
-                                    <h5>Text Im-/Export</h5>
-                                    <small>You can copy & paste the code from/into here.<br /> To get the code, press "export" and copy the code to a file.<br /> If you want to restore an old list, copy the code into here and click "Import". </small><br />
-                                    <textarea id="feedslistcode"></textarea><br />
-                                    <button class="btn btn-default">Import</button>
-                                    <button class="btn btn-default" onclick="textexport()">Export</button>
-                                    <hr />
-                                    <h5>File Im-/Export</h5>
-                                    <small>You can import from or export into a file </small><br />
-                                    <input type="file" id="importfile" class="fl" name="file" onchange="fileimport()">
-                                    <label for="importfile" class="btn btn-default">Import</label>
-                                    <button class="btn btn-default" onclick="fileexport()">Export</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn" data-dismiss="modal">Close</button>
-                                </div>
+                        <div class="row FilterRows">
+                            <div class="col-xs-12" id="FilteredTitles">
+                                Titles: 
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="NewFeedModal" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header custom-modal-header">
-                                    Add Custom Feed
-                                </div>
-                                <div class="modal-body" id="NewFeedDiv">
+            </div>
+        @*</div>*@
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <footer class="nav-styling">
+        <div class="copyright col-xs-8">
+            &copy; Timo Scheile, Lukas Knapp
+        </div>
+        <div class="pull-right btn btn-styling" data-toggle="modal" data-target="#ImExportModal">
+            Im/Export Feedslist
+        </div>
+    </footer>
+    <div class="modal fade" id="ImExportModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header">
+                    Im-/Export Feedslist
+                </div>
+                <div class="modal-body">
+                    Your Feedsslist is stored locally in your cookies. If you want to switch Browsers or your Operating system altogether, you can Im-/Export your list here.
+                    <hr />
+                    <h5>Text Im-/Export</h5>
+                    <small>You can copy & paste the code from/into here.<br /> To get the code, press "export" and copy the code to a file.<br /> If you want to restore an old list, copy the code into here and click "Import". </small><br />
+                    <textarea id="feedslistcode"></textarea><br />
+                    <button class="btn btn-default">Import</button>
+                    <button class="btn btn-default" onclick="textexport()">Export</button>
+                    <hr />
+                    <h5>File Im-/Export</h5>
+                    <small>You can import from or export into a file </small><br />
+                    <input type="file" id="importfile" class="fl" name="file" onchange="fileimport()">
+                    <label for="importfile" class="btn btn-default">Import</label>
+                    <button class="btn btn-default" onclick="fileexport()">Export</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="NewFeedModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header">
+                    Add Custom Feed
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
 
-                                    <div class="form-group">
-                                        <label for="link">Link</label>
-                                        <input type="text" class="form-control" name="link" id="NewFeedLink" placeholder="exapmple-link.com/RSS" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" name="name" id="NewFeedName" placeholder="RSS-Feed Name" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="category">Categories</label>
-                                        <input type="text" class="form-control" name="category" id="NewFeedCategory" placeholder="Category1, Category2, [...]" />
-                                        <small class="text-muted">Seperate Categories by ','</small>
-                                    </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="link">Link</label>
+                        <input type="text" class="form-control" name="link" id="NewFeedLink" placeholder="example-link.com/RSS" />
                     </div>
-                        </div>
-
-                    <div class="modal fade" id="FilterFeedModal" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header custom-modal-header">
-                                    Filter Feed
-                                </div>
-                                <div class="modal-body" id="NewFeedDiv">
-
-                                    <div class="form-group">
-                                        <label for="sources">Sources</label>
-                                        <input type="text" class="form-control" name="sources" id="FilterChannels" placeholder="YouTube, CNN, [...]" />
-                                        <small class="text-muted"><input type="checkbox" name="ChannelsExclude" id="ChannelsExclude" />Exclude given sources</small><br />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="categories">Categories</label>
-                                        <input type="text" class="form-control" name="categories" id="FilterCategories" placeholder="News, Politics, [...]" />
-                                        <small class="text-muted"><input type="checkbox" name="CategoriesExclude" id="CategoriesExclude" />Exclude given categories</small><br />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="titles">Titles</label>
-                                        <input type="text" class="form-control" name="titles" id="FilterTitles" placeholder="Donald Trump, US-Army, [...]" />
-                                        <small class="text-muted"><input type="checkbox" name="TitlesExclude" id="TitlesExclude" />Exclude given titles</small><br />
-                                    </div>
-
-                                    <small class="text-muted">
-                                        Seperate enties by ','
-                                    </small>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="reset" class="btn" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn" data-dismiss="modal" onclick="loadFeeds(true)">Filter</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" name="name" id="NewFeedName" placeholder="RSS-Feed Name" />
                     </div>
-
-                    <div class="modal fade" id="WrongLinkModal" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header alert-danger">
-                                    Link is not RSS
-                                </div>
-                                <div class="modal-body" id="NewFeedDiv">
-
-                                    The submitted link does not contain a RSS-feed, please check the link you provided
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="category">Categories</label>
+                        <input type="text" class="form-control" name="category" id="NewFeedCategory" placeholder="Category1, Category2, [...]" />
+                        <small class="text-muted">Seperate Categories by ','</small>
                     </div>
 
-                    <div class="modal fade" id="SuccessModal" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header alert-success">
-                                    RSS-Feed added!
-                                </div>
-                                <div class="modal-body" id="NewFeedDiv">
+                    <button class="btn" onclick="addFeed()">Add Feed</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                    The RSS Feed has successfully been added to your list!
+    <div class="modal fade" id="FilterFeedModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header">
+                    Filter Feed
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
 
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="sources">Sources</label>
+                        <input type="text" class="form-control" name="sources" id="FilterChannels" placeholder="YouTube, CNN, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="ChannelsExclude" id="ChannelsExclude" />Exclude given sources</small><br />
+                    </div>
+                    <div class="form-group">
+                        <label for="categories">Categories</label>
+                        <input type="text" class="form-control" name="categories" id="FilterCategories" placeholder="News, Politics, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="CategoriesExclude" id="CategoriesExclude" />Exclude given categories</small><br />
+                    </div>
+                    <div class="form-group">
+                        <label for="titles">Titles</label>
+                        <input type="text" class="form-control" name="titles" id="FilterTitles" placeholder="Donald Trump, US-Army, [...]" />
+                        <small class="text-muted"><input type="checkbox" name="TitlesExclude" id="TitlesExclude" />Exclude given titles</small><br />
                     </div>
 
+                    <small class="text-muted">
+                        Seperate enties by ','
+                    </small>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn" data-dismiss="modal" onclick="loadFeeds(true)">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="WrongLinkModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert-danger">
+                    Link is not RSS
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    The submitted link does not contain a RSS-feed, please check the link you provided
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="LinkAlreadyExistsModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert-danger">
+                    Link already exists
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    There is already an RSS-feed with this link, you can't add a link multiple times
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="SuccessModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert-success">
+                    RSS-Feed added!
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    The RSS Feed has successfully been added to your list!
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditSuccessModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header alert-success">
+                    RSS-Feed edited!
+                </div>
+                <div class="modal-body" id="NewFeedDiv">
+
+                    The RSS Feed has successfully been edited!
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

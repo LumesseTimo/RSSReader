@@ -20,30 +20,72 @@ function OpenEdit(link) {
         }
     }
 
-    console.log(neededChannel);
-
     if (neededChannel != undefined && neededChannel != null) {
         $('#editLink').val(neededChannel.link);
         $('#editName').val(neededChannel.name);
 
         for (var c = 0 ; c < neededChannel.categories.length; c++) { //for each element in the category-array
-            categories += getChannel.categories[c] + "', ";  //adds the name of the category followed by a comma and a space
+            categories += neededChannel.categories[c] + ", ";  //adds the name of the category followed by a comma and a space
         }
         while (categories.length > 0 && categories.lastIndexOf(", ") >= categories.length - 2) { //while the last occurence of ", " is at the very end of the string
             categories = categories.substring(0, categories.length - 2); //remove the ", " from the string
         }
-        $('#editChannels').val(categories);
+
+        $('#editCategories').val(categories);
         $('#EditModal').modal('show');
     }
 }
 
-function EditFeed(){
+function EditFeed() {
     var ID = $('#editFeedID').val();
     if ($('#editLink').val() != "" && $('#editName').val() != "" && $('#editFeedID').val() != "") {
         var getChannels = Cookies.getJSON('Sources');
         var channelToEdit = JSON.parse(getChannels.channel[ID]);
 
-        //TODO: Basically alles
+        var NewCategories = Array();
+        for (var i = 0; i < $("#editCategories").val().split(",").length; i++) { //goes trhough all the categories the user specified
+            NewCategories[i] = $("#editCategories").val().split(",")[i].trim(); //adds the categories to an array
+        }
+
+        channelToEdit = { "link": $("#editLink").val(), "name": $('#editName').val(), "categories": NewCategories, "image": channelToEdit.image }; //update the channel with the new information the user added
+
+        getChannels.channel[ID] = JSON.stringify(channelToEdit); //updates the Channel in the array of channels
+        Cookies.set('Sources', JSON.stringify(getChannels), { expires: 3650 }); //sets the cookie with an expiry time of 10 years
+
+        $('.loading').show(); //show the loading screen
+        setTimeout(loadFeeds(true), 10); //load the feedslist
+
+        //Code to update the feedlist on the right side whenever a feed is edited
+        var feedsListHtml = "";
+        $('#sources').html(feedsListHtml); //emptys the feedlist
+        for (var c = 0; c < getChannels.channel.length; c++) {
+            var currentChannel = JSON.parse(getChannels.channel[c])
+
+            //gets the important informations about the channel and puts them into variables
+            var channellink = currentChannel.link;
+            var channeltitle = currentChannel.name;
+            var channelcategorys = "";
+            var imageUrl = currentChannel.image;
+
+            for (var i = 0; i < currentChannel.categories.length ; i++) {
+                channelcategorys += (currentChannel.categories[i] + ",")
+            }
+            channelcategorys = channelcategorys.substring(0, channelcategorys.length - 1) //remove the "," from the string
+            
+            var parameters = "'" + channellink + "', '" + channeltitle + "', '" + channelcategorys + "'";
+
+            if (imageUrl == "" || imageUrl == null) {
+                imageUrl = "/Content/Images/noPictureAvailable.jpg";
+            }
+
+            //builds the div for the channel
+            feedsListHtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + channellink + '" title="' + channeltitle + ' ">' + channeltitle + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span><span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + channellink + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>'; //builds the div for the channel
+            $('#sources').html($('#sources').html() + feedsListHtml);
+        }
+        $('#sources').html($('#sources').html() + '<div class="RSS-Source Row btn" data-toggle="modal" data-target="#NewFeedModal"><div class="Row alignContainer"><span class="alignHelper"></span><span class="glyphicon glyphicon-plus-sign"></span><span class="aligner"> Add New Feed </span></div></div>');
+        //-----------------------------------------------------------------------------------
+
+        $("#EditSuccessModal").modal('show'); //show that the link has been successfully edited
     }
 }
 
@@ -120,8 +162,8 @@ function lzw_encode(s) {
         }
     }
     out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-    for (var i = 0; i < out.length; i++) {
-        out[i] = String.fromCharCode(out[i]);
+    for (var a = 0; a < out.length; a++) {
+        out[a] = String.fromCharCode(out[a]);
     }
     return out.join("");
 }
@@ -195,12 +237,18 @@ function loadFeeds(shallFilter) {
     categoryFilter = $('#FilterCategories').val();
     titleFilter = $('#FilterTitles').val();
 
-
     //sets variables whether to ex/include the items you entered the filters for
-    excludeCategory = $('#CategoriesExclude').is(':checked');
     excludeSource = $('#ChannelsExclude').is(':checked');
+    excludeCategory = $('#CategoriesExclude').is(':checked');
     excludeTitle = $('#TitlesExclude').is(':checked');
 
+    $('#FilteredSources').html("");
+    $('#FilteredCategories').html("");
+    $('#FilteredTitles').html("");
+
+    var yesOrNoSource = "";
+    var yesOrNoCategory = "";
+    var yesOrNoTitle = "";
 
     if (Cookies.getJSON('Sources') != undefined) {
         var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Object, which is saved in the Cookie "Sources"
@@ -222,9 +270,9 @@ function loadFeeds(shallFilter) {
                         if (shallFilter == true) { //checks if filters need to be applied
 
                             if(sourceFilter.toLowerCase().trim() != ""){
+                                var sourceFilterArray = sourceFilter.split(","); //the (not) wanted titles get seperatedvar 
                                 var sourceOkay = excludeSource; //sets the variable that checks whether the item's source is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
-                                var sourceFilterArray = sourceFilter.split(","); //the (not) wanted titles get seperated
-
+                                
                                 for (var a = 0; a < sourceFilterArray.length && sourceFilter.length > 0; a++) { //runs trhough all the filters in the array, if there are any
                                     if (channeltitle.toLowerCase().indexOf(sourceFilterArray[a].toLowerCase().trim()) > -1)//if it finds an accordance/eine Übereinstimmung
                                     {
@@ -233,6 +281,14 @@ function loadFeeds(shallFilter) {
                                     }
                                 }
 
+                                //shows the informations about the Filter at the top right of the screen
+                                yesOrNoSource = "Sources: ";
+                                if (excludeSource == true) {
+                                    yesOrNoSource += "<span class='glyphicon glyphicon-remove'></span> ";
+                                }
+                                else {
+                                    yesOrNoSource += "<span class='glyphicon glyphicon-ok'></span> ";
+                                }
                             }
                             else {
                                 sourceOkay = true;
@@ -242,20 +298,31 @@ function loadFeeds(shallFilter) {
                                 var categoryFilterArray = categoryFilter.split(","); //the (not) wanted categorys get seperated
                                 var categoryOkay = excludeCategory; //sets the variable that checks whether the item's category is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
 
-                                for (var b = 0; b < categoryFilterArray.length && categoryFilter.length > 0; b++) { //runs trhough all the filters in the array, if there are any
+                                for (var b = 0; b < categoryFilterArray.length && categoryFilter.length > 0; b++) { //runs through all the filters in the array, if there are any
+                                    console.log(feed.find("category").text())
+                                    console.log(categoryFilterArray[b]);
                                     if (feed.find("category").text().toLowerCase().indexOf(categoryFilterArray[b].toLowerCase().trim()) > -1) {//if it finds an accordance/eine Übereinstimmung
                                         categoryOkay = !categoryOkay; //inverts the default check for whether the category is okay or not 
                                         break; //exits the loop to save computing time (and to make sure the variable categoryOkay has the correct value)
                                     }
                                 }
-
+                                console.log(excludeCategory);
                                 if (categoryOkay == excludeCategory) { //checks if the categoryOkay variable already has been inverted
-                                    for (var c = 0 ; c < getChannel.categories.length; c++) { //runs thourgh all the categories the user specified for the 
+                                    for (var c = 0 ; c < getChannel.categories.length && categoryFilter.length > 0; c++) { //runs thourgh all the categories the user specified for the 
                                         if (getChannel.categories[c].indexOf(categoryFilterArray[c].toLowerCase().trim()) > -1) {//if it finds an accordance/eine Übereinstimmung
                                             categoryOkay = !categoryOkay; //inverts the default check for whether the category is okay or not 
                                             break;//exits the loop to save computing time (and to make sure the variable categoryOkay has the correct value)
                                         }
                                     }
+                                }
+
+                                //shows the informations about the Filter at the top right of the screen
+                                yesOrNoCategory = "Categories: ";
+                                if (excludeCategory == true) {
+                                    yesOrNoCategory += "<span class='glyphicon glyphicon-remove'></span> ";
+                                }
+                                else {
+                                    yesOrNoCategory += "<span class='glyphicon glyphicon-ok'></span> ";
                                 }
                             }
                             else {
@@ -266,17 +333,29 @@ function loadFeeds(shallFilter) {
                                 var titleFilterArray = titleFilter.split(","); //the (not) wanted titles get seperated
                                 var titleOkay = excludeTitle;
 
-                                for (var c = 0; c < titleFilterArray.length && titleFilter.length > 0; c++) { //runs thourgh all the titles the user specified for the 
-                                    if (feed.find("title").text().toLowerCase().indexOf(titleFilterArray[c].toLowerCase().trim()) > -1) {//if it finds an accordance/eine Übereinstimmung
+                                for (var d = 0; d < titleFilterArray.length && titleFilter.length > 0; d++) { //runs thourgh all the titles the user specified for the 
+                                    if (feed.find("title").text().toLowerCase().indexOf(titleFilterArray[d].toLowerCase().trim()) > -1) {//if it finds an accordance/eine Übereinstimmung
                                         titleOkay = !titleOkay; //inverts the default check for whether the title is okay or not 
                                         break; //exits the loop to save computing time (and to make sure the variable categoryOkay has the correct value)
                                     }
+                                }
+
+                                //shows the informations about the Filter at the top right of the screen
+                                yesOrNoTitle = "Titles: ";
+                                if (excludeTitle == true) {
+                                    yesOrNoTitle += "<span class='glyphicon glyphicon-remove'></span> ";
+                                }
+                                else {
+                                    yesOrNoTitle += "<span class='glyphicon glyphicon-ok'></span> ";
                                 }
                             }
                             else {
                                 titleOkay = true;
                             }
 
+                            $('#FilteredSources').html(yesOrNoSource + sourceFilter);
+                            $('#FilteredCategories').html(yesOrNoCategory + categoryFilter);
+                            $('#FilteredTitles').html(yesOrNoTitle + titleFilter);
                         }
 
                         if (shallFilter == false || (sourceOkay == true && categoryOkay == true && titleOkay == true)) { //checks if the list is supposed to be filtered at all, if yes: if the current item-element's title, categories and source are okay   
@@ -287,8 +366,8 @@ function loadFeeds(shallFilter) {
                                 categories += category.text().trim() + ", "; //adds the name of the category followed by a comma and a space
 
                             });
-                            for (var c = 0 ; c < getChannel.categories.length; c++) { //for each element in the category-array
-                                categories += getChannel.categories[c] + ", ";  //adds the name of the category followed by a comma and a space
+                            for (var e = 0 ; e < getChannel.categories.length; e++) { //for each element in the category-array
+                                categories += getChannel.categories[e] + ", ";  //adds the name of the category followed by a comma and a space
                             }
 
                             while (categories.length > 0 && categories.lastIndexOf(", ") >= categories.length - 2) { //while the last occurence of ", " is at the very end of the string
@@ -313,9 +392,9 @@ function loadFeeds(shallFilter) {
             $("#loadingProgress").attr("style", "width: " + progress + "%;"); //sets the width of the progress bar
         }
 
-        for (var i = 0; i < feedsList.length; i++) {
-            if (isNaN(feedsList[i].pubDate)) {
-                feedsList[i].pubDate = 0; //sets the date to the 1.1.1970 00:00:00 for every item that hasn't got a (valid) date. This is done for sorting purposes. 
+        for (var f = 0; f < feedsList.length; f++) {
+            if (isNaN(feedsList[f].pubDate)) {
+                feedsList[f].pubDate = 0; //sets the date to the 1.1.1970 00:00:00 for every item that hasn't got a (valid) date. This is done for sorting purposes. 
             }
         }
 
@@ -334,7 +413,7 @@ function loadFeeds(shallFilter) {
 
     }
 
-    var progress = 0; //sets progress bar to 0
+    progress = 0; //sets progress bar to 0
     $("#loadingProgress").attr("style", "width: " + progress + "%;"); //sets the width of the filled out part of the progress bar to the calculated percentage
     $('.loading').hide(); //hide the loading 
 }
@@ -361,7 +440,6 @@ function createFeedsList() {
     */
     var sourceshtml = "";
     var channellink = "";
-    var channeldiv = "";
     $('#sources').html("");
     if (Cookies.getJSON('Sources') != undefined) {
         var getChannels = Cookies.getJSON('Sources'); //gets the JSON-Objekt, which is saved in the Cookie "Sources"
@@ -391,9 +469,13 @@ function createFeedsList() {
                         categories = categories.substring(0, categories.length - 2); //remove the ", " from the string
                     }
 
-                    var parameters = "'"+channellink + "', '" + channeltitle + "', " + categories;
+                    var parameters = "'" + channellink + "', '" + channeltitle + "', " + categories;
 
-                    sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + '" title="' + channeltitle + ' ">' + channeltitle + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span><span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + channellink + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>'; //builds the div for the channel
+                    if (imageUrl == "" || imageUrl == null) {
+                        imageUrl = "/Content/Images/noPictureAvailable.jpg";
+                    }
+
+                    sourceshtml = '<div class="RSS-Source Row"><div class="RSS-Thumbnail col-sm-3 alignContainer"><span class="alignHelper"></span><img src="' + imageUrl + '" class="aligner"></div><div class="RSS-Link col-sm-7 alignContainer"><span class="alignHelper"></span><a class="aligner" target="_blank" href="' + sitelink + '" title="' + channeltitle + '">' + channeltitle + '</a></div><div class="RSS-Subscription col-sm-2 alignContainer"><span class="alignHelper"></span><span class="glyphicon glyphicon-pencil aligner" onclick="OpenEdit(&quot;' + channellink + '&quot;)" title="Edit"></span><span class="glyphicon glyphicon-remove-circle aligner" onclick="UnSubscribe(this, ' + parameters + ')" remove="" title="Remove"></span></div></div>'; //builds the div for the channel
                     $('#sources').html($('#sources').html() + sourceshtml);
                 }
 
