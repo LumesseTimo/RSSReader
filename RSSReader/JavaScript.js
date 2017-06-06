@@ -222,7 +222,7 @@ function loadFeeds(shallFilter) {
                         if (shallFilter == true) { //checks if filters need to be applied
 
                             if(sourceFilter.toLowerCase().trim() != ""){
-                                var sourceOkay = !excludeSource; //sets the variable that checks whether the item's source is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
+                                var sourceOkay = excludeSource; //sets the variable that checks whether the item's source is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
                                 var sourceFilterArray = sourceFilter.split(","); //the (not) wanted titles get seperated
 
                                 for (var a = 0; a < sourceFilterArray.length && sourceFilter.length > 0; a++) { //runs trhough all the filters in the array, if there are any
@@ -240,7 +240,7 @@ function loadFeeds(shallFilter) {
 
                             if (categoryFilter.toLowerCase().trim() != "") {
                                 var categoryFilterArray = categoryFilter.split(","); //the (not) wanted categorys get seperated
-                                var categoryOkay = !excludeCategory; //sets the variable that checks whether the item's category is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
+                                var categoryOkay = excludeCategory; //sets the variable that checks whether the item's category is okay to the default (true for if the filters are meant to exclude certain items, false if otherwise)
 
                                 for (var b = 0; b < categoryFilterArray.length && categoryFilter.length > 0; b++) { //runs trhough all the filters in the array, if there are any
                                     if (feed.find("category").text().toLowerCase().indexOf(categoryFilterArray[b].toLowerCase().trim()) > -1) {//if it finds an accordance/eine Übereinstimmung
